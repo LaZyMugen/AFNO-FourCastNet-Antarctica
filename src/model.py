@@ -52,11 +52,9 @@ class PositionalEmbedding(nn.Module):
     def forward(self, x):
 
         return x + self.pos_embed
-    
 
 
-
-    class AFNO2D(nn.Module):
+class AFNO2D(nn.Module):
 
     def __init__(
         self,
