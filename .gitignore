@@ -1,0 +1,13 @@
+__pycache__/
+.ipynb_checkpoints/
+
+*.pyc
+
+data/*.npy
+!data/means.npy
+!data/stds.npy
+
+era5_processed.npy
+
+*.pth
+!checkpoints/best_model.pth
