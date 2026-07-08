@@ -43,13 +43,18 @@
 \contentsline {section}{\numberline {10.2}Distributed Data Parallelism (DDP) Scaling}{26}{section.10.2}%
 \contentsline {section}{\numberline {10.3}Mixed Precision and Kernel Optimization}{26}{section.10.3}%
 \contentsline {section}{\numberline {10.4}Alternative Execution Kernels}{27}{section.10.4}%
-\contentsline {chapter}{\numberline {11}Meteorological Visualization and Performance Catalog}{28}{chapter.11}%
-\contentsline {section}{\numberline {11.1}Maitri Station Diagnostic Plots}{28}{section.11.1}%
-\contentsline {section}{\numberline {11.2}Bharati Station Diagnostic Plots}{31}{section.11.2}%
-\contentsline {section}{\numberline {11.3}Sample Epoch and Running Average Performance Comparisons}{33}{section.11.3}%
-\contentsline {chapter}{\numberline {12}Conclusions and Future Work}{34}{chapter.12}%
-\contentsline {section}{\numberline {12.1}Conclusions}{34}{section.12.1}%
-\contentsline {section}{\numberline {12.2}Future Work}{34}{section.12.2}%
-\contentsline {chapter}{\numberline {13}Recommendations}{35}{chapter.13}%
-\contentsline {chapter}{\numberline {A}Fourier Transform in Neural Operators}{38}{appendix.A}%
-\contentsline {chapter}{\numberline {B}ERA5 CDS API Retrieval Script}{39}{appendix.B}%
+\contentsline {chapter}{\numberline {11}Local Workstation Setup and Workflow}{28}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Repository Cloning and Environment Setup}{28}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Retrieving the ERA5 Meteorological Dataset}{28}{section.11.2}%
+\contentsline {section}{\numberline {11.3}Data Preprocessing and Normalization}{29}{section.11.3}%
+\contentsline {section}{\numberline {11.4}Running Inference and Dashboard Generation}{29}{section.11.4}%
+\contentsline {chapter}{\numberline {12}Meteorological Visualization and Performance Catalog}{31}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Maitri Station Diagnostic Plots}{31}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Bharati Station Diagnostic Plots}{34}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Sample Epoch and Running Average Performance Comparisons}{36}{section.12.3}%
+\contentsline {chapter}{\numberline {13}Conclusions and Future Work}{37}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Conclusions}{37}{section.13.1}%
+\contentsline {section}{\numberline {13.2}Future Work}{37}{section.13.2}%
+\contentsline {chapter}{\numberline {14}Recommendations}{38}{chapter.14}%
+\contentsline {chapter}{\numberline {A}Fourier Transform in Neural Operators}{41}{appendix.A}%
+\contentsline {chapter}{\numberline {B}ERA5 CDS API Retrieval Script}{42}{appendix.B}%

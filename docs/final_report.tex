@@ -368,12 +368,12 @@ To produce a 24-hour forecast from a 48-hour lookback, the model uses an autoreg
 % ==========================================
 \chapter{Results - Maitri Station}
 \section{Training Convergence \& Convergence Analysis}
-The Maitri model was trained on the expanded 9.5-year dataset for 30 epochs. The training loss decreased steadily from $0.1794$ (Epoch 1) to $0.1264$ (Epoch 30). The validation loss converged to \textbf{0.1448} by Epoch 20 and stabilized, indicating that the model successfully learned regional atmospheric dynamics. The training curve (located in Chapter 11, Figure 11.1) demonstrates stable convergence, with a small generalization gap that confirms the model is not overfitting.
+The Maitri model was trained on the expanded 9.5-year dataset for 30 epochs. The training loss decreased steadily from $0.1794$ (Epoch 1) to $0.1264$ (Epoch 30). The validation loss converged to \textbf{0.1448} by Epoch 20 and stabilized, indicating that the model successfully learned regional atmospheric dynamics. The training curve (located in Chapter 12, Figure 12.1) demonstrates stable convergence, with a small generalization gap that confirms the model is not overfitting.
 
 \section{Temperature and Wind Speed Forecast Inferences}
 Out-of-sample evaluations on the 2025–2026 test set show varying performance between variables:
 \begin{itemize}
-    \item \textbf{2m Temperature (t2m):} The model achieves a strong linear correlation, with points in the scatter plot (Figure 11.2) clustering tightly along the diagonal. The raw model underpredicted extreme cold temperatures below $245$ K due to spatial smoothing, which was corrected by the post-processing bias correction layer.
+    \item \textbf{2m Temperature (t2m):} The model achieves a strong linear correlation, with points in the scatter plot (Figure 12.2) clustering tightly along the diagonal. The raw model underpredicted extreme cold temperatures below $245$ K due to spatial smoothing, which was corrected by the post-processing bias correction layer.
 \end{itemize}
 
 \begin{figure}[H]
@@ -388,7 +388,7 @@ Out-of-sample evaluations on the 2025–2026 test set show varying performance b
 \end{itemize}
 
 \section{Severe Weather Meteorogram Inferences}
-We evaluated the model during a severe winter storm at Maitri. The meteorogram (Figure 11.4) shows that the model successfully forecast a rapid temperature drop from $265$ K to $242$ K and a wind speed spike from $6$ m/s to $28$ m/s, demonstrating its capability to capture high-impact storm developments in the region.
+We evaluated the model during a severe winter storm at Maitri. The meteorogram (Figure 12.4) shows that the model successfully forecast a rapid temperature drop from $265$ K to $242$ K and a wind speed spike from $6$ m/s to $28$ m/s, demonstrating its capability to capture high-impact storm developments in the region.
 
 \begin{figure}[H]
     \centering
@@ -398,7 +398,7 @@ We evaluated the model during a severe winter storm at Maitri. The meteorogram (
 \end{figure}
 
 \section{Monthly Climatological Drift Analysis}
-The climatological drift analysis (Figure 11.5) over a 12-month period reveals that the model's predictions gradually smooth out extreme high-frequency variations over longer lead times. This is a common characteristic of models trained with mean squared error (MSE) loss, which optimizes for the mean state. While the model remains stable, this smoothing effect reduces the variance of forecasts at longer horizons.
+The climatological drift analysis (Figure 12.5) over a 12-month period reveals that the model's predictions gradually smooth out extreme high-frequency variations over longer lead times. This is a common characteristic of models trained with mean squared error (MSE) loss, which optimizes for the mean state. While the model remains stable, this smoothing effect reduces the variance of forecasts at longer horizons.
 
 % ==========================================
 % CHAPTER 7: BIAS CORRECTION POST-PROCESSING (DETAILED)
@@ -460,13 +460,13 @@ The post-processing layer improved the $R^2$ scores and reduced the mean absolut
 The Bharati station model operates on a larger domain ($120 \times 200 = 24,000$ grid points) compared to Maitri's grid ($21 \times 81 = 1,701$ points). This larger area covers the Amery Ice Shelf and the complex topography of the Larsemann Hills, requiring the model to represent both marine boundary layers and high-altitude polar plateau regimes.
 
 \section{Convergence and Loss Profile}
-The Bharati model was trained on CPU with single-threaded locks. The training loss converged steadily, starting at $0.6542$ and decreasing to $0.1865$ by Epoch 30 (Figure 11.6). The validation loss tracked the training loss closely, confirming the stability of the AFNO architecture on the larger spatial domain.
+The Bharati model was trained on CPU with single-threaded locks. The training loss converged steadily, starting at $0.6542$ and decreasing to $0.1865$ by Epoch 30 (Figure 12.6). The validation loss tracked the training loss closely, confirming the stability of the AFNO architecture on the larger spatial domain.
 
 \section{Bharati Forecast Inferences}
 \begin{itemize}
-    \item \textbf{Temperature Scatter (Figure 11.7):} The model matches observations across the $235$ K to $280$ K range. The lower temperature range ($<240$ K) exhibits slightly higher variance, likely due to localized katabatic flows over the coastal slopes.
-    \item \textbf{Wind Speed Scatter (Figure 11.8):} Wind speed predictions show larger errors during extreme events ($>18$ m/s) due to localized wind acceleration over the coastal topography.
-    \item \textbf{Storm Meteorogram (Figure 11.9):} The model successfully tracked a severe coastal storm, capturing the rapid wind speed variations and corresponding temperature changes.
+    \item \textbf{Temperature Scatter (Figure 12.7):} The model matches observations across the $235$ K to $280$ K range. The lower temperature range ($<240$ K) exhibits slightly higher variance, likely due to localized katabatic flows over the coastal slopes.
+    \item \textbf{Wind Speed Scatter (Figure 12.8):} Wind speed predictions show larger errors during extreme events ($>18$ m/s) due to localized wind acceleration over the coastal topography.
+    \item \textbf{Storm Meteorogram (Figure 12.9):} The model successfully tracked a severe coastal storm, capturing the rapid wind speed variations and corresponding temperature changes.
 \end{itemize}
 
 \begin{figure}[H]
@@ -617,7 +617,74 @@ singularity exec --nv fourcastnet.sif python src/inference.py --station bharati
 \end{itemize}
 
 % ==========================================
-% CHAPTER 11: METEOROLOGICAL VISUALIZATION AND PERFORMANCE CATALOG (NEW)
+% CHAPTER 11: LOCAL WORKSTATION SETUP AND WORKFLOW (NEW)
+% ==========================================
+\chapter{Local Workstation Setup and Workflow}
+This chapter provides a step-by-step setup guide for deploying and running the FourCastNet regional forecasting model on a local workstation or laptop from scratch. It assumes no pre-installed dependencies other than Python.
+
+\section{Repository Cloning and Environment Setup}
+To begin, clone the repository and initialize a Python virtual environment to manage dependencies locally:
+\begin{lstlisting}[language=bash, caption=Repository Setup and Environment Initialization]
+# Clone the repository
+git clone https://github.com/LaZyMugen/AFNO-FourCastNet-Antarctica.git
+cd AFNO-FourCastNet-Antarctica
+
+# Create a virtual environment
+python -m venv .venv
+
+# Activate the virtual environment (Windows PowerShell)
+.venv\Scripts\Activate.ps1
+
+# Activate the virtual environment (Linux/macOS)
+# source .venv/bin/activate
+
+# Upgrade pip and install required dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+\end{lstlisting}
+
+\section{Retrieving the ERA5 Meteorological Dataset}
+The model requires GRIB format ERA5 surface data. The Copernicus Climate Data Store (CDS) API is used for retrieval. 
+\begin{enumerate}
+    \item Register for a free account at \href{https://cds.climate.copernicus.eu}{Copernicus Climate Data Store}.
+    \item Retrieve your API User ID (UID) and Key from your profile page.
+    \item Create a configuration file named \texttt{\_cdsapirc} (or \texttt{.cdsapirc} on Linux) inside your user profile home directory (e.g., \texttt{C:\textbackslash{}Users\textbackslash{}Username\textbackslash{}} on Windows or \texttt{\textasciitilde{}/} on Linux) with the following format:
+    \begin{lstlisting}[caption=.cdsapirc Configuration Format]
+url: https://cds.climate.copernicus.eu/api/v2
+key: YOUR_API_UID:YOUR_API_KEY
+    \end{lstlisting}
+    \item Execute the retrieval script in Python to download GRIB files locally:
+    \begin{lstlisting}[language=Python, caption=Downloading ERA5 Surface Variables]
+# Run python to execute retrieval (script code provided in Appendix B)
+python src/download_era5.py
+    \end{lstlisting}
+\end{enumerate}
+
+\section{Data Preprocessing and Normalization}
+Once GRIB files are downloaded, they must be parsed, regionalized to Maitri or Bharati grids, converted to NetCDF format, padded to dimensions divisible by the patch size ($P=4$), and normalized:
+\begin{lstlisting}[language=bash, caption=Pre-processing the Datasets]
+# Preprocess the regional station datasets (e.g. Maitri)
+python src/preprocess_maitri_safe.py
+\end{lstlisting}
+This command converts raw GRIB files into the padded NumPy arrays required for model operations, saving the output files directly into the \texttt{data/} directory.
+
+\section{Running Inference and Dashboard Generation}
+With the pre-trained checkpoints in place, local forecasting, validation, and visual dashboards can be generated.
+\begin{enumerate}
+    \item **Run Forecast Inference:** Generate multi-step autoregressive weather predictions (out-of-sample evaluations):
+    \begin{lstlisting}[language=bash, caption=Running Autoregressive Forecast Inference]
+python src/inference.py --station maitri
+    \end{lstlisting}
+    Output files will be written to \texttt{checkpoints/maitri/} and validation metrics will be generated.
+    \item **Generate Visual Dashboards:** Generate training history convergence, temperature scatter, wind speed scatter, severe storm meteorograms, and monthly climatology drift plots:
+    \begin{lstlisting}[language=bash, caption=Dashboard and Graphs Generation]
+python src/generate_dashboards.py
+    \end{lstlisting}
+    All high-resolution outputs will be saved directly to the respective station figures folder: \texttt{figures/maitri/dashboards/} and \texttt{figures/bharati/dashboards/}.
+\end{enumerate}
+
+% ==========================================
+% CHAPTER 12: METEOROLOGICAL VISUALIZATION AND PERFORMANCE CATALOG (NEW)
 % ==========================================
 \chapter{Meteorological Visualization and Performance Catalog}
 This chapter compiles all diagnostic figures, training convergence curves, validation dashboards, and forecast comparison plots generated for the Maitri and Bharati stations.
@@ -703,7 +770,7 @@ This chapter compiles all diagnostic figures, training convergence curves, valid
 \end{figure}
 
 % ==========================================
-% CHAPTER 12: CONCLUSIONS AND FUTURE WORK
+% CHAPTER 13: CONCLUSIONS AND FUTURE WORK
 % ==========================================
 \chapter{Conclusions and Future Work}
 \section{Conclusions}
@@ -726,7 +793,7 @@ Several future steps are identified:
 \end{itemize}
 
 % ==========================================
-% CHAPTER 13: RECOMMENDATIONS
+% CHAPTER 14: RECOMMENDATIONS
 % ==========================================
 \chapter{Recommendations}
 \begin{enumerate}
