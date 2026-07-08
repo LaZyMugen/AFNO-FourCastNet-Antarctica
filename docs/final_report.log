@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.7.7)  8 JUL 2026 15:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.7.7)  8 JUL 2026 15:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -495,25 +495,16 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 61.
  (D:\miktex\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-LaTeX Warning: File `midsem_images/page1_img1.png' not found on input line 76.
-
-
-! Package pdftex.def Error: File `midsem_images/page1_img1.png' not found: usin
-g draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.76 ...width=2.2cm]{midsem_images/page1_img1.png}
-                                                   \\
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
+<midsem_images/page1_img1.png, id=223, 169.38281pt x 169.38281pt>
+File: midsem_images/page1_img1.png Graphic file (type png)
+<use midsem_images/page1_img1.png>
+Package pdftex.def Info: midsem_images/page1_img1.png  used on input line 76.
+(pdftex.def)             Requested size: 62.59596pt x 62.59569pt.
 
 [1
 
-{C:/Users/Shashwat/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+{C:/Users/Shashwat/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <D:/AFNO-F
+ourCastNet-Antarctica/docs/midsem_images/page1_img1.png (PNG copy)>]
 Underfull \hbox (badness 4608) in paragraph at lines 106--106
 []|\OT1/cmr/bx/n/12 Name(s) and Des-ig-na-
  []
@@ -616,7 +607,7 @@ Overfull \hbox (20.43967pt too wide) in paragraph at lines 354--354
 
 [16 <./figures/maitri/training_history_maitri.png>]
 Chapter 6.
-<figures/maitri/dashboards/dashboard_temp_scatter_maitri.png, id=435, 1149.093p
+<figures/maitri/dashboards/dashboard_temp_scatter_maitri.png, id=436, 1149.093p
 t x 523.9575pt>
 File: figures/maitri/dashboards/dashboard_temp_scatter_maitri.png Graphic file 
 (type png)
@@ -627,7 +618,7 @@ i.png  used on input line 381.
 [17
 
  <./figures/maitri/dashboards/dashboard_temp_scatter_maitri.png>]
-<figures/maitri/dashboards/dashboard_storm_meteorogram_maitri.png, id=441, 1077
+<figures/maitri/dashboards/dashboard_storm_meteorogram_maitri.png, id=442, 1077
 .0639pt x 697.4055pt>
 File: figures/maitri/dashboards/dashboard_storm_meteorogram_maitri.png Graphic 
 file (type png)
@@ -645,7 +636,7 @@ Overfull \hbox (10.93187pt too wide) in paragraph at lines 432--442
 [19
 
 ]
-<figures/maitri/dashboards/dashboard_wind_scatter_maitri.png, id=459, 1149.093p
+<figures/maitri/dashboards/dashboard_wind_scatter_maitri.png, id=460, 1149.093p
 t x 523.9575pt>
 File: figures/maitri/dashboards/dashboard_wind_scatter_maitri.png Graphic file 
 (type png)
@@ -655,7 +646,7 @@ i.png  used on input line 450.
 (pdftex.def)             Requested size: 285.0315pt x 129.9657pt.
  [20 <./figures/maitri/dashboards/dashboard_wind_scatter_maitri.png>]
 Chapter 8.
-<figures/bharati/dashboards/dashboard2_temp_scatter_bharati.png, id=465, 1156.3
+<figures/bharati/dashboards/dashboard2_temp_scatter_bharati.png, id=466, 1156.3
 2pt x 542.025pt>
 File: figures/bharati/dashboards/dashboard2_temp_scatter_bharati.png Graphic fi
 le (type png)
@@ -666,7 +657,7 @@ rati.png  used on input line 474.
 [21
 
 ]
-<figures/bharati/dashboards/dashboard_storm_meteorogram_bharati.png, id=470, 10
+<figures/bharati/dashboards/dashboard_storm_meteorogram_bharati.png, id=471, 10
 75.8594pt x 697.4055pt>
 File: figures/bharati/dashboards/dashboard_storm_meteorogram_bharati.png Graphi
 c file (type png)
@@ -743,7 +734,7 @@ file (type png)
 Package pdftex.def Info: figures/maitri/dashboards/dashboard_storm_meteorogram_
 maitri.png  used on input line 646.
 (pdftex.def)             Requested size: 372.73967pt x 241.35007pt.
-<figures/maitri/dashboards/dashboard_climatology_drift_maitri.png, id=551, 1149
+<figures/maitri/dashboards/dashboard_climatology_drift_maitri.png, id=552, 1149
 .3339pt x 523.7166pt>
 File: figures/maitri/dashboards/dashboard_climatology_drift_maitri.png Graphic 
 file (type png)
@@ -752,7 +743,7 @@ Package pdftex.def Info: figures/maitri/dashboards/dashboard_climatology_drift_
 maitri.png  used on input line 652.
 (pdftex.def)             Requested size: 372.73967pt x 169.84627pt.
  [29] [30 <./figures/maitri/dashboards/dashboard_climatology_drift_maitri.png>]
-<figures/bharati/training_history_bharati.png, id=562, 733.2996pt x 400.1349pt>
+<figures/bharati/training_history_bharati.png, id=563, 733.2996pt x 400.1349pt>
 
 File: figures/bharati/training_history_bharati.png Graphic file (type png)
 <use figures/bharati/training_history_bharati.png>
@@ -765,7 +756,7 @@ le (type png)
 Package pdftex.def Info: figures/bharati/dashboards/dashboard2_temp_scatter_bha
 rati.png  used on input line 667.
 (pdftex.def)             Requested size: 372.73967pt x 174.71693pt.
-<figures/bharati/dashboards/dashboard_wind_scatter_bharati.png, id=563, 1149.09
+<figures/bharati/dashboards/dashboard_wind_scatter_bharati.png, id=564, 1149.09
 3pt x 523.9575pt>
 File: figures/bharati/dashboards/dashboard_wind_scatter_bharati.png Graphic fil
 e (type png)
@@ -779,7 +770,7 @@ c file (type png)
 Package pdftex.def Info: figures/bharati/dashboards/dashboard_storm_meteorogram
 _bharati.png  used on input line 679.
 (pdftex.def)             Requested size: 372.73967pt x 241.6161pt.
-<figures/bharati/dashboards/dashboard_climatology_drift_bharati.png, id=564, 11
+<figures/bharati/dashboards/dashboard_climatology_drift_bharati.png, id=565, 11
 49.093pt x 523.7166pt>
 File: figures/bharati/dashboards/dashboard_climatology_drift_bharati.png Graphi
 c file (type png)
@@ -792,7 +783,7 @@ _bharati.png  used on input line 685.
  <./figures/bharati/training_history_bharati.png> <./figures/bharati/dashboards
 /dashboard_wind_scatter_bharati.png>] [32 <./figures/bharati/dashboards/dashboa
 rd_climatology_drift_bharati.png>]
-<figures/maitri/epoch_020/t2m_timeseries_maitri.png, id=576, 505.4082pt x 338.7
+<figures/maitri/epoch_020/t2m_timeseries_maitri.png, id=577, 505.4082pt x 338.7
 054pt>
 File: figures/maitri/epoch_020/t2m_timeseries_maitri.png Graphic file (type png
 )
@@ -800,7 +791,7 @@ File: figures/maitri/epoch_020/t2m_timeseries_maitri.png Graphic file (type png
 Package pdftex.def Info: figures/maitri/epoch_020/t2m_timeseries_maitri.png  us
 ed on input line 694.
 (pdftex.def)             Requested size: 372.73967pt x 249.79565pt.
-<figures/antarctic_running_average.png, id=577, 1084.05pt x 505.89pt>
+<figures/antarctic_running_average.png, id=578, 1084.05pt x 505.89pt>
 File: figures/antarctic_running_average.png Graphic file (type png)
 <use figures/antarctic_running_average.png>
 Package pdftex.def Info: figures/antarctic_running_average.png  used on input l
@@ -845,10 +836,10 @@ Package rerunfilecheck Info: File `final_report.out' has not changed.
 (rerunfilecheck)             Checksum: 38F7E89CBE42022F2B3468294A56C847;12229.
  ) 
 Here is how much of TeX's memory you used:
- 14615 strings out of 467871
- 223803 string characters out of 5435203
- 1006320 words of memory out of 5000000
- 43072 multiletter control sequences out of 15000+600000
+ 14592 strings out of 467871
+ 222903 string characters out of 5435203
+ 1006377 words of memory out of 5000000
+ 43049 multiletter control sequences out of 15000+600000
  635834 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,11n,79p,736b,2104s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -865,9 +856,9 @@ e1/public/amsfonts/cm/cmsy6.pfb><D:/miktex/fonts/type1/public/amsfonts/cm/cmsy8
 1/public/amsfonts/cm/cmtt10.pfb><D:/miktex/fonts/type1/public/amsfonts/cm/cmtt1
 2.pfb><D:/miktex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
 Output written on D:\AFNO-FourCastNet-Antarctica\docs\final_report.pdf (40 page
-s, 8341330 bytes).
+s, 8358714 bytes).
 PDF statistics:
- 794 PDF objects out of 1000 (max. 8388607)
+ 795 PDF objects out of 1000 (max. 8388607)
  252 named destinations out of 1000 (max. 500000)
- 501 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 506 words of extra memory for PDF output out of 10000 (max. 10000000)
 
