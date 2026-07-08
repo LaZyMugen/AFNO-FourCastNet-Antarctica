@@ -38,13 +38,18 @@
 \contentsline {section}{\numberline {9.3}Ensemble Scalability \& Operational Risk Assessment}{24}{section.9.3}%
 \contentsline {section}{\numberline {9.4}Physical Consistency \& Conservation Laws}{24}{section.9.4}%
 \contentsline {section}{\numberline {9.5}Forecast Performance in Polar Environments}{24}{section.9.5}%
-\contentsline {chapter}{\numberline {10}Meteorological Visualization and Performance Catalog}{25}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Maitri Station Diagnostic Plots}{25}{section.10.1}%
-\contentsline {section}{\numberline {10.2}Bharati Station Diagnostic Plots}{28}{section.10.2}%
-\contentsline {section}{\numberline {10.3}Sample Epoch and Running Average Performance Comparisons}{30}{section.10.3}%
-\contentsline {chapter}{\numberline {11}Conclusions and Future Work}{31}{chapter.11}%
-\contentsline {section}{\numberline {11.1}Conclusions}{31}{section.11.1}%
-\contentsline {section}{\numberline {11.2}Future Work}{31}{section.11.2}%
-\contentsline {chapter}{\numberline {12}Recommendations}{32}{chapter.12}%
-\contentsline {chapter}{\numberline {A}Fourier Transform in Neural Operators}{35}{appendix.A}%
-\contentsline {chapter}{\numberline {B}ERA5 CDS API Retrieval Script}{36}{appendix.B}%
+\contentsline {chapter}{\numberline {10}High-Performance Computing (HPC) Deployment and Kernel Optimization}{25}{chapter.10}%
+\contentsline {section}{\numberline {10.1}HPC Infrastructure and Scheduler Integration}{25}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Distributed Data Parallelism (DDP) Scaling}{26}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Mixed Precision and Kernel Optimization}{26}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Alternative Execution Kernels}{27}{section.10.4}%
+\contentsline {chapter}{\numberline {11}Meteorological Visualization and Performance Catalog}{28}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Maitri Station Diagnostic Plots}{28}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Bharati Station Diagnostic Plots}{31}{section.11.2}%
+\contentsline {section}{\numberline {11.3}Sample Epoch and Running Average Performance Comparisons}{33}{section.11.3}%
+\contentsline {chapter}{\numberline {12}Conclusions and Future Work}{34}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Conclusions}{34}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Future Work}{34}{section.12.2}%
+\contentsline {chapter}{\numberline {13}Recommendations}{35}{chapter.13}%
+\contentsline {chapter}{\numberline {A}Fourier Transform in Neural Operators}{38}{appendix.A}%
+\contentsline {chapter}{\numberline {B}ERA5 CDS API Retrieval Script}{39}{appendix.B}%

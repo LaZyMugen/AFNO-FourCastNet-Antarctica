@@ -368,12 +368,12 @@ To produce a 24-hour forecast from a 48-hour lookback, the model uses an autoreg
 % ==========================================
 \chapter{Results - Maitri Station}
 \section{Training Convergence \& Convergence Analysis}
-The Maitri model was trained on the expanded 9.5-year dataset for 30 epochs. The training loss decreased steadily from $0.1794$ (Epoch 1) to $0.1264$ (Epoch 30). The validation loss converged to \textbf{0.1448} by Epoch 20 and stabilized, indicating that the model successfully learned regional atmospheric dynamics. The training curve (located in Chapter 10, Figure 10.1) demonstrates stable convergence, with a small generalization gap that confirms the model is not overfitting.
+The Maitri model was trained on the expanded 9.5-year dataset for 30 epochs. The training loss decreased steadily from $0.1794$ (Epoch 1) to $0.1264$ (Epoch 30). The validation loss converged to \textbf{0.1448} by Epoch 20 and stabilized, indicating that the model successfully learned regional atmospheric dynamics. The training curve (located in Chapter 11, Figure 11.1) demonstrates stable convergence, with a small generalization gap that confirms the model is not overfitting.
 
 \section{Temperature and Wind Speed Forecast Inferences}
 Out-of-sample evaluations on the 2025–2026 test set show varying performance between variables:
 \begin{itemize}
-    \item \textbf{2m Temperature (t2m):} The model achieves a strong linear correlation, with points in the scatter plot (Figure 10.2) clustering tightly along the diagonal. The raw model underpredicted extreme cold temperatures below $245$ K due to spatial smoothing, which was corrected by the post-processing bias correction layer.
+    \item \textbf{2m Temperature (t2m):} The model achieves a strong linear correlation, with points in the scatter plot (Figure 11.2) clustering tightly along the diagonal. The raw model underpredicted extreme cold temperatures below $245$ K due to spatial smoothing, which was corrected by the post-processing bias correction layer.
 \end{itemize}
 
 \begin{figure}[H]
@@ -388,7 +388,7 @@ Out-of-sample evaluations on the 2025–2026 test set show varying performance b
 \end{itemize}
 
 \section{Severe Weather Meteorogram Inferences}
-We evaluated the model during a severe winter storm at Maitri. The meteorogram (Figure 10.4) shows that the model successfully forecast a rapid temperature drop from $265$ K to $242$ K and a wind speed spike from $6$ m/s to $28$ m/s, demonstrating its capability to capture high-impact storm developments in the region.
+We evaluated the model during a severe winter storm at Maitri. The meteorogram (Figure 11.4) shows that the model successfully forecast a rapid temperature drop from $265$ K to $242$ K and a wind speed spike from $6$ m/s to $28$ m/s, demonstrating its capability to capture high-impact storm developments in the region.
 
 \begin{figure}[H]
     \centering
@@ -398,7 +398,7 @@ We evaluated the model during a severe winter storm at Maitri. The meteorogram (
 \end{figure}
 
 \section{Monthly Climatological Drift Analysis}
-The climatological drift analysis (Figure 10.5) over a 12-month period reveals that the model's predictions gradually smooth out extreme high-frequency variations over longer lead times. This is a common characteristic of models trained with mean squared error (MSE) loss, which optimizes for the mean state. While the model remains stable, this smoothing effect reduces the variance of forecasts at longer horizons.
+The climatological drift analysis (Figure 11.5) over a 12-month period reveals that the model's predictions gradually smooth out extreme high-frequency variations over longer lead times. This is a common characteristic of models trained with mean squared error (MSE) loss, which optimizes for the mean state. While the model remains stable, this smoothing effect reduces the variance of forecasts at longer horizons.
 
 % ==========================================
 % CHAPTER 7: BIAS CORRECTION POST-PROCESSING (DETAILED)
@@ -460,13 +460,13 @@ The post-processing layer improved the $R^2$ scores and reduced the mean absolut
 The Bharati station model operates on a larger domain ($120 \times 200 = 24,000$ grid points) compared to Maitri's grid ($21 \times 81 = 1,701$ points). This larger area covers the Amery Ice Shelf and the complex topography of the Larsemann Hills, requiring the model to represent both marine boundary layers and high-altitude polar plateau regimes.
 
 \section{Convergence and Loss Profile}
-The Bharati model was trained on CPU with single-threaded locks. The training loss converged steadily, starting at $0.6542$ and decreasing to $0.1865$ by Epoch 30 (Figure 10.6). The validation loss tracked the training loss closely, confirming the stability of the AFNO architecture on the larger spatial domain.
+The Bharati model was trained on CPU with single-threaded locks. The training loss converged steadily, starting at $0.6542$ and decreasing to $0.1865$ by Epoch 30 (Figure 11.6). The validation loss tracked the training loss closely, confirming the stability of the AFNO architecture on the larger spatial domain.
 
 \section{Bharati Forecast Inferences}
 \begin{itemize}
-    \item \textbf{Temperature Scatter (Figure 10.7):} The model matches observations across the $235$ K to $280$ K range. The lower temperature range ($<240$ K) exhibits slightly higher variance, likely due to localized katabatic flows over the coastal slopes.
-    \item \textbf{Wind Speed Scatter (Figure 10.8):} Wind speed predictions show larger errors during extreme events ($>18$ m/s) due to localized wind acceleration over the coastal topography.
-    \item \textbf{Storm Meteorogram (Figure 10.9):} The model successfully tracked a severe coastal storm, capturing the rapid wind speed variations and corresponding temperature changes.
+    \item \textbf{Temperature Scatter (Figure 11.7):} The model matches observations across the $235$ K to $280$ K range. The lower temperature range ($<240$ K) exhibits slightly higher variance, likely due to localized katabatic flows over the coastal slopes.
+    \item \textbf{Wind Speed Scatter (Figure 11.8):} Wind speed predictions show larger errors during extreme events ($>18$ m/s) due to localized wind acceleration over the coastal topography.
+    \item \textbf{Storm Meteorogram (Figure 11.9):} The model successfully tracked a severe coastal storm, capturing the rapid wind speed variations and corresponding temperature changes.
 \end{itemize}
 
 \begin{figure}[H]
@@ -532,7 +532,92 @@ All three models are purely data-driven and do not enforce mass, momentum, or en
 The flat 2D projection used in FourCastNet's FFT calculations introduces distortions near the geographic poles. GraphCast's spherical grid handles polar coordinates more effectively. However, for regional forecasting over specific station domains, FourCastNet's local efficiency remains a key advantage.
 
 % ==========================================
-% CHAPTER 10: METEOROLOGICAL VISUALIZATION AND PERFORMANCE CATALOG (NEW)
+% CHAPTER 10: HIGH-PERFORMANCE COMPUTING (HPC) DEPLOYMENT (NEW)
+% ==========================================
+\chapter{High-Performance Computing (HPC) Deployment and Kernel Optimization}
+This chapter provides a technical guide for deploying and running the regional AFNO-based FourCastNet model on high-performance computing (HPC) architectures. It covers scheduler integration, multi-GPU scaling, mixed precision compilation, and alternative execution kernels.
+
+\section{HPC Infrastructure and Scheduler Integration}
+To scale training and run large ensemble forecasts, the model is designed to integrate with cluster workload managers such as Slurm. High-performance weather modeling relies on allocating dedicated compute resources, specifying node counts, CPU-to-GPU ratios, and utilizing memory pinning to accelerate PCIe data transfers between host RAM and GPU VRAM.
+
+A sample production-grade Slurm submission script (\texttt{submit\_job.sh}) is detailed below:
+\begin{lstlisting}[language=bash, caption=Slurm Job Submission Script for FourCastNet Training]
+#!/bin/bash
+#SBATCH --job-name=fourcastnet_polar
+#SBATCH --partition=gpu
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH --output=logs/train_%j.log
+
+# Load system CUDA and compiler modules
+module load cuda/12.1
+module load cudnn/8.9
+module load conda/latest
+
+# Activate conda virtual environment
+source activate fourcastnet_env
+
+# Optimize CPU thread locks for data loaders
+export OMP_NUM_THREADS=8
+export MKL_NUM_THREADS=8
+
+# Run model training with mixed precision
+python -u src/train.py \
+    --config config/config.py \
+    --station maitri \
+    --precision amp
+\end{lstlisting}
+
+\section{Distributed Data Parallelism (DDP) Scaling}
+For massive polar grids, such as the Bharati $120 \times 200$ domain, training can be accelerated across multiple GPUs on a single node or across multiple nodes. We utilize PyTorch's Distributed Data Parallel (DDP) framework instead of DP (DataParallel) to bypass Python's Global Interpreter Lock (GIL) and enable asynchronous gradient communication:
+\begin{equation}
+    \mathbf{g}_{\text{global}} = \frac{1}{N} \sum_{i=1}^{N} \mathbf{g}_i
+\end{equation}
+where $N$ is the number of GPUs, $\mathbf{g}_i$ is the local gradient vector computed on GPU $i$, and the average $\mathbf{g}_{\text{global}}$ is synchronized via an all-reduce operation over NVIDIA Collective Communications Library (NCCL) channels.
+
+The network scaling setup requires configuring environment variables before spawning tasks:
+\begin{lstlisting}[language=bash, caption=Environment Variables for NCCL and DDP]
+# NCCL and PyTorch distributed environment configurations
+export MASTER_ADDR="10.0.0.1"
+export MASTER_PORT=12345
+export WORLD_SIZE=4
+export RANK=0
+
+# Force NCCL transport to use InfiniBand interfaces
+export NCCL_DEBUG=INFO
+export NCCL_IB_DISABLE=0
+\end{lstlisting}
+
+\section{Mixed Precision and Kernel Optimization}
+Memory bandwidth is the primary bottleneck in Fourier-based neural operators due to the extensive use of 2D Fast Fourier Transforms ($\mathcal{F}$) and inverse Fast Fourier Transforms ($\mathcal{F}^{-1}$). To maximize training throughput, we implement Automatic Mixed Precision (AMP):
+\begin{enumerate}
+    \item Forward pass weights and activations are cast to 16-bit floating-point (FP16 or BF16) representation, doubling the effective VRAM memory bandwidth.
+    \item Loss scaling is applied to prevent numerical underflow in the gradient calculations:
+    \begin{equation}
+        \mathcal{L}_{\text{scaled}} = S \cdot \mathcal{L}
+    \end{equation}
+    where $S = 2^{16}$ is the initial dynamic scaling factor.
+    \item Gradients are unscaled before the optimizer step to ensure update stability.
+\end{enumerate}
+
+Additionally, PyTorch's compiler kernel compilation (\texttt{torch.compile(model, mode="max-autotune")}) is utilized to fuse pointwise operations, Layer Normalizations, and activation functions, avoiding intermediate memory read/write cycles to the GPU Global Memory.
+
+\section{Alternative Execution Kernels}
+When GPU clusters are unavailable or undergoing maintenance, execution fallbacks are provided to ensure operational continuity:
+\begin{itemize}
+    \item \textbf{Single-threaded CPU Lock:} For workstation dry-runs and inference tasks, setting \texttt{OMP\_NUM\_THREADS=1} and \texttt{MKL\_NUM\_THREADS=1} eliminates thread context-switching overhead and prevents CPU core overheating.
+    \item \textbf{Singularity/Apptainer Containerization:} To ensure reproducibility across heterogeneous HPC environments with different host driver versions, the software stack is packaged into a Singularity container, executing as:
+    \begin{lstlisting}[language=bash, caption=Singularity Execution Command]
+singularity exec --nv fourcastnet.sif python src/inference.py --station bharati
+    \end{lstlisting}
+\end{itemize}
+
+% ==========================================
+% CHAPTER 11: METEOROLOGICAL VISUALIZATION AND PERFORMANCE CATALOG (NEW)
 % ==========================================
 \chapter{Meteorological Visualization and Performance Catalog}
 This chapter compiles all diagnostic figures, training convergence curves, validation dashboards, and forecast comparison plots generated for the Maitri and Bharati stations.
@@ -618,7 +703,7 @@ This chapter compiles all diagnostic figures, training convergence curves, valid
 \end{figure}
 
 % ==========================================
-% CHAPTER 11: CONCLUSIONS AND FUTURE WORK
+% CHAPTER 12: CONCLUSIONS AND FUTURE WORK
 % ==========================================
 \chapter{Conclusions and Future Work}
 \section{Conclusions}
@@ -641,7 +726,7 @@ Several future steps are identified:
 \end{itemize}
 
 % ==========================================
-% CHAPTER 12: RECOMMENDATIONS
+% CHAPTER 13: RECOMMENDATIONS
 % ==========================================
 \chapter{Recommendations}
 \begin{enumerate}
