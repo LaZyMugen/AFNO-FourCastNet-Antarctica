@@ -4,6 +4,7 @@ from pathlib import Path
 
 from model import FourCastNet
 from dataset import ERA5Dataset
+from config.config import *
 
 device = torch.device(
     "cuda" if torch.cuda.is_available()
@@ -20,11 +21,11 @@ figures_dir = base_dir / "figures"
 figures_dir.mkdir(exist_ok=True)
 
 # Load data
-data_path = base_dir / "era5_processed.npy"
+data_path = base_dir / DATA_FILE
 if not data_path.exists():
     raise FileNotFoundError(
         f"Data file not found: {data_path}\n"
-        f"Please provide era5_processed.npy in the project root"
+        f"Please provide the data file in the project root"
     )
 
 data = np.load(
@@ -35,8 +36,13 @@ data = np.load(
 print("Dataset Shape:", data.shape)
 
 # Load normalization statistics
-means_path = data_dir / "means.npy"
-stds_path = data_dir / "stds.npy"
+# Note: For Maitri, we load from data/processed/mean.npy and std.npy if they exist
+if STATION == 'maitri':
+    means_path = data_dir / "processed" / "mean.npy"
+    stds_path = data_dir / "processed" / "std.npy"
+else:
+    means_path = data_dir / "means.npy"
+    stds_path = data_dir / "stds.npy"
 
 means = None
 stds = None
@@ -50,8 +56,8 @@ else:
 
 dataset = ERA5Dataset(
     data,
-    in_steps=8,
-    out_steps=4,
+    in_steps=IN_STEPS,
+    out_steps=OUT_STEPS,
     means=means,
     stds=stds,
     normalize=True
@@ -62,7 +68,11 @@ print("Samples:", len(dataset))
 model = FourCastNet().to(device)
 
 # Load model
-model_path = checkpoint_dir / "best_model.pth"
+model_path = checkpoint_dir / f"best_model_{STATION}.pth"
+if not model_path.exists():
+    # Fallback to default best_model.pth if station-specific doesn't exist yet
+    model_path = checkpoint_dir / "best_model.pth"
+
 if not model_path.exists():
     raise FileNotFoundError(
         f"Model file not found: {model_path}\n"
@@ -78,7 +88,7 @@ model.load_state_dict(
 
 model.eval()
 
-print("Model Loaded")
+print(f"Model Loaded from {model_path}")
 
 # Get first sample
 x, y = dataset[0]
@@ -96,7 +106,7 @@ print("Prediction Shape:", pred.shape)
 import matplotlib.pyplot as plt
 
 step = 0
-var = 2
+var = T2M_IDX
 
 fig, ax = plt.subplots(
     1,
@@ -131,7 +141,7 @@ ax[2].colorbar = plt.colorbar(ax[2].images[0], ax=ax[2])
 
 plt.tight_layout()
 
-output_path = figures_dir / "demo_forecast.png"
+output_path = figures_dir / f"demo_forecast_{STATION}.png"
 plt.savefig(
     str(output_path),
     dpi=300,
@@ -140,4 +150,5 @@ plt.savefig(
 
 print(f"Forecast saved to: {output_path}")
 
-plt.show()
+# Avoid showing plot window during automated tasks
+# plt.show()

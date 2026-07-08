@@ -4,3 +4,4 @@ matplotlib
 xarray
 netCDF4
 jupyter
+cfgrib

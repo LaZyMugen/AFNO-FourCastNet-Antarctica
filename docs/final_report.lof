@@ -1,0 +1,32 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Maitri Training and Validation Loss Convergence history over 30 epochs.}}{16}{figure.caption.7}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Maitri 2m Temperature Scatter - Raw vs Bias-Corrected.}}{17}{figure.caption.8}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces 72-Hour Storm Event Meteorogram at Maitri.}}{18}{figure.caption.9}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Maitri 10m Wind Speed Scatter - Raw vs Bias-Corrected.}}{20}{figure.caption.11}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Bharati 2m Temperature Scatter - Raw vs Bias-Corrected.}}{22}{figure.caption.12}%
+\contentsline {figure}{\numberline {8.2}{\ignorespaces 72-Hour Storm Event Meteorogram at Bharati.}}{22}{figure.caption.13}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {10.1}{\ignorespaces Maitri Training convergence history over 30 epochs.}}{25}{figure.caption.15}%
+\contentsline {figure}{\numberline {10.2}{\ignorespaces Maitri 2m Temperature validation scatter plot (Raw vs Corrected).}}{26}{figure.caption.16}%
+\contentsline {figure}{\numberline {10.3}{\ignorespaces Maitri 10m Wind Speed validation scatter plot (Raw vs Corrected).}}{26}{figure.caption.17}%
+\contentsline {figure}{\numberline {10.4}{\ignorespaces Maitri 72-Hour Storm Event validation meteorogram.}}{26}{figure.caption.18}%
+\contentsline {figure}{\numberline {10.5}{\ignorespaces Maitri monthly climatology and forecast drift analysis.}}{27}{figure.caption.19}%
+\contentsline {figure}{\numberline {10.6}{\ignorespaces Bharati Training convergence history over 30 epochs.}}{28}{figure.caption.20}%
+\contentsline {figure}{\numberline {10.7}{\ignorespaces Bharati 2m Temperature validation scatter plot (Raw vs Corrected).}}{28}{figure.caption.21}%
+\contentsline {figure}{\numberline {10.8}{\ignorespaces Bharati 10m Wind Speed validation scatter plot (Raw vs Corrected).}}{28}{figure.caption.22}%
+\contentsline {figure}{\numberline {10.9}{\ignorespaces Bharati 72-Hour Storm Event validation meteorogram.}}{29}{figure.caption.23}%
+\contentsline {figure}{\numberline {10.10}{\ignorespaces Bharati monthly climatology and forecast drift analysis.}}{29}{figure.caption.24}%
+\contentsline {figure}{\numberline {10.11}{\ignorespaces Maitri Sample Epoch 20 Temperature Timeseries Plot.}}{30}{figure.caption.25}%
+\contentsline {figure}{\numberline {10.12}{\ignorespaces Antarctic Temperature Forecasts -- 30-Day Running Average (2021 In-Sample).}}{30}{figure.caption.26}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

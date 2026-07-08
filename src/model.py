@@ -22,21 +22,22 @@ class PatchEmbed(nn.Module):
 
         x = self.proj(x)
 
-        B,C,H,W = x.shape
+        B, C, H, W = x.shape
+
+        patch_h = H
+        patch_w = W
 
         x = x.flatten(2)
 
-        x = x.transpose(1,2)
+        x = x.transpose(1, 2)
 
-        return x
-    
-  
-
+        return x, patch_h, patch_w
+        
 class PositionalEmbedding(nn.Module):
 
     def __init__(
         self,
-        num_patches=1500,
+        max_patches=5000,
         embed_dim=128
     ):
         super().__init__()
@@ -44,14 +45,16 @@ class PositionalEmbedding(nn.Module):
         self.pos_embed = nn.Parameter(
             torch.zeros(
                 1,
-                num_patches,
+                max_patches,
                 embed_dim
             )
         )
 
     def forward(self, x):
 
-        return x + self.pos_embed
+        N = x.shape[1]
+
+        return x + self.pos_embed[:, :N]    
 
 
 class AFNO2D(nn.Module):
@@ -74,12 +77,15 @@ class AFNO2D(nn.Module):
 
         self.act = nn.GELU()
 
-    def forward(self, x):
 
-        B,N,C = x.shape
+    def forward(
+        self,
+        x,
+        H,
+        W
+    ):
 
-        H = 30
-        W = 50
+        B, N, C = x.shape
 
         x = x.reshape(
             B,
@@ -94,7 +100,7 @@ class AFNO2D(nn.Module):
             1,
             2
         )
-
+    
         freq = torch.fft.rfft2(x)
 
         real = freq.real
@@ -188,7 +194,6 @@ class MLP(nn.Module):
 
         return x
     
-
 class AFNOBlock(nn.Module):
 
     def __init__(
@@ -215,10 +220,18 @@ class AFNOBlock(nn.Module):
             mlp_ratio
         )
 
-    def forward(self, x):
+
+    def forward(
+        self,
+        x,
+        H,
+        W
+    ):
 
         x = x + self.afno(
-            self.norm1(x)
+            self.norm1(x),
+            H,
+            W
         )
 
         x = x + self.mlp(
@@ -226,7 +239,6 @@ class AFNOBlock(nn.Module):
         )
 
         return x
-    
 
 class PatchRecovery(nn.Module):
 
@@ -249,7 +261,12 @@ class PatchRecovery(nn.Module):
             stride=patch_size
         )
 
-    def forward(self, x):
+    def forward(
+    self,
+    x,
+    patch_h,
+    patch_w
+):
 
         B,N,C = x.shape
 
@@ -261,14 +278,13 @@ class PatchRecovery(nn.Module):
         x = x.reshape(
             B,
             C,
-            30,
-            50
+            patch_h,
+            patch_w
         )
 
         x = self.proj(x)
 
         return x
-    
 
 
 class FourCastNet(nn.Module):
@@ -287,8 +303,9 @@ class FourCastNet(nn.Module):
         )
 
         self.pos_embed = PositionalEmbedding(
-            1500,
-            embed_dim
+        max_patches=5000,
+        embed_dim=embed_dim
+        
         )
 
         self.blocks = nn.ModuleList(
@@ -317,22 +334,33 @@ class FourCastNet(nn.Module):
             W
         )
 
-        x = self.patch_embed(x)
+        x, patch_h, patch_w = self.patch_embed(x)
 
         x = self.pos_embed(x)
 
         for block in self.blocks:
 
-            x = block(x)
+            x = block(
+                x,
+                patch_h,
+                patch_w
+            )
 
-        x = self.recovery(x)
+        x = self.recovery(
+    x,
+    patch_h,
+    patch_w
+)   
+
+        out_h = patch_h * 4
+        out_w = patch_w * 4
 
         x = x.reshape(
             B,
             4,
             4,
-            120,
-            200
+            out_h,
+            out_w
         )
 
         return x

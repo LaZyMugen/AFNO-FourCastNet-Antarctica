@@ -1,13 +1,42 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
 .ipynb_checkpoints/
-
 *.pyc
 
-data/*.npy
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# Large NumPy arrays
+*.npy
 !data/means.npy
 !data/stds.npy
+!data/processed/mean.npy
+!data/processed/std.npy
 
-era5_processed.npy
+# Raw GRIB and NetCDF datasets
+*.grib
+*.idx
+*.nc
+data/raw/
+data/temp_maitri/
+test.npy
+era5_maitri.npy
 
+# Intermediate training / monitoring epoch plots
+figures/maitri/epoch_*/
+figures/bharati/epoch_*/
+figures/epoch_*/
+
+# Model checkpoints
 *.pth
 !checkpoints/best_model.pth
+!checkpoints/maitri/best_model_maitri.pth
+!checkpoints/bharati/best_model_bharati.pth
+
+# Bias correction pickle files
+!checkpoints/maitri/bias_correction/*.pkl
+!checkpoints/bharati/bias_correction/*.pkl
+!checkpoints/maitri/bias_correction/bias_corrector_*.pkl
+!checkpoints/bharati/bias_correction/bias_corrector_*.pkl

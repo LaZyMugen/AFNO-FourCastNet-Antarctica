@@ -1,0 +1,972 @@
+﻿=== PAGE 1 ===
+REPORT
+ON
+AFNO-BASED FOURCASTNET MODEL FOR ANTARCTIC WEATHER FORECASTING
+BY
+Name of the student:
+ID No.:
+Discipline:
+Shaswat Sahoo
+2024A7PS0152H
+B.E. in CSE
+Prepared in partial fulfillment of the
+Practice School - I
+AT
+National Centre for Polar and Ocean Research (NCPOR), Goa
+A Practice School - I
+Station of
+BIRLA INSTITUTE OF TECHNOLOGY & SCIENCE, PILANI
+July, 2026
+
+=== PAGE 2 ===
+BIRLA INSTITUTE OF TECHNOLOGY & SCIENCE, PILANI
+Practice School Division
+Station
+National Centre for Polar and Ocean Research, Goa
+Duration
+May 2026 - July 2026
+Date of start
+25th May 2026
+Date of submission
+18th July 2026
+Title of the project:
+AFNO-Based FourCastNet Model
+ID No.(s), Name(s) and Dis-
+ciplines:
+2024A7PS0152H, Shaswat Sahoo, B.E. CSE
+Name(s) and Designation(s)
+of expert(s):
+VS Samy, Scientist, NCPOR
+Name(s) of PS faculty mem-
+ber(s):
+Prof Hemant Rathore
+Key words:
+FourCastNet, AFNO, Antarctic, ERA5,
+Deep Learning, Weather Forecasting
+Project area(s):
+Numerical Weather Prediction, Deep Learning,
+Polar Meteorology
+Abstract:
+Lightweight AFNO-based FourCastNet model for region
+Antarctic weather forecasting at Maitri station.
+ERA5 data (2021-2025) used with 48h input window
+to produce 24h forecasts at 6-hourly resolution.
+Signature of the student(s)
+Signature of the PS faculty member(s)
+Date
+Date
+
+=== PAGE 3 ===
+Acknowledgements
+I would like to express my sincere gratitude to the National Centre for Polar and Ocean
+Research (NCPOR), Goa, for providing me with the opportunity to undertake this Practice
+School internship in such a stimulating and scientifically rich environment.
+The experi-
+ence of working on Antarctic weather forecasting has been both intellectually enriching and
+personally rewarding.
+I am deeply grateful to my expert mentor at NCPOR, VS Samy, for their invaluable guidance,
+patient explanations, and continuous encouragement throughout the project. Their domain
+expertise in polar meteorology and numerical weather prediction provided indispensable
+direction to this work.
+I also thank the Practice School faculty member, Hemant Sir, for their academic oversight
+and constructive feedback during the course of this internship.
+I acknowledge the European Centre for Medium-Range Weather Forecasts (ECMWF) and
+the Copernicus Climate Data Store (CDS) for making the ERA5 reanalysis dataset publicly
+available, which formed the backbone of this project. I also thank the developers of the orig-
+inal FourCastNet framework whose open-source contributions made this regional adaptation
+possible.
+Finally, I thank BITS Pilani, Hyderabad Campus, and the Practice School Division for
+designing the PS-I programme, which bridges academic learning with real-world scientific
+challenges.
+Signature of the student
+3
+
+=== PAGE 4 ===
+Contents
+Acknowledgements
+3
+1
+Introduction
+8
+1.1
+Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+8
+1.2
+Organisation of the Report . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+9
+2
+Literature Review
+10
+2.1
+Data-Driven Weather Prediction . . . . . . . . . . . . . . . . . . . . . . . . .
+10
+2.2
+Fourier Neural Operators and FourCastNet . . . . . . . . . . . . . . . . . . .
+10
+2.3
+Antarctic Meteorological Modelling . . . . . . . . . . . . . . . . . . . . . . .
+11
+3
+Dataset and Preprocessing
+12
+3.1
+ERA5 Reanalysis Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+12
+3.2
+Variables . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+12
+3.3
+Dataset Shape and Temporal Structure . . . . . . . . . . . . . . . . . . . . .
+13
+3.4
+Forecasting Configuration
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+13
+3.5
+Padding and Preprocessing . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+13
+4
+Model Architecture
+14
+4.1
+Patch Embedding . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+14
+4.2
+Positional Embedding
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+15
+4.3
+Adaptive Fourier Neural Operator (AFNO) Block . . . . . . . . . . . . . . .
+15
+4.4
+Patch Recovery . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+15
+4.5
+Dynamic Grid Support . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+15
+4.6
+Model Configuration Summary
+. . . . . . . . . . . . . . . . . . . . . . . . .
+16
+5
+Methodology and Training
+17
+5.1
+Training Configuration . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+5.2
+Checkpointing . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+5.3
+Visualisation and Diagnostics
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+5.4
+Software Stack
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+18
+5.5
+HPC Readiness . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+18
+6
+Results and Discussion
+19
+6.1
+Training Convergence . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+19
+6.2
+Temperature Forecast Skill . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+19
+4
+
+=== PAGE 5 ===
+6.3
+Spatial Forecast Quality . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+19
+6.4
+Average Spatial Temperature Error . . . . . . . . . . . . . . . . . . . . . . .
+20
+6.5
+Station-Level Time Series
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+20
+6.6
+Limitations
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+20
+7
+Diagnostic Figures
+21
+8
+Conclusions and Future Work
+26
+8.1
+Conclusions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+26
+8.2
+Future Work . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+26
+9
+Recommendations
+28
+Bibliography
+30
+Appendices
+31
+A Fourier Transform in Neural Operators
+32
+B ERA5 CDS API Retrieval Script
+33
+5
+
+=== PAGE 6 ===
+List of Figures
+7.1
+AFNO FourCastNet training progress over 30 epochs. Training loss (blue)
+decreases continuously from 0.22 to 0.08. Validation loss (orange) plateaus at
+approximately 0.10 after epoch 15, indicating good generalisation with mild
+late-epoch overfitting. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+21
+7.2
+Scatter plot of predicted versus ground truth normalised 2 m temperature over
+the full validation set. Points cluster tightly along the diagonal, confirming
+high overall forecast fidelity.
+Minor spread at extreme values reflects rare
+anomalous events. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+22
+7.3
+Spatial forecast evaluation across all four lead times (t+1 to t+4, each 6
+hours). Each row shows ERA5 ground truth (left), AFNO prediction (middle),
+and signed error (right). The model captures the broad coastal-to-interior
+temperature gradient at all lead times. Structured residuals in the mid-grid
+coastal transition zone increase modestly with lead time. . . . . . . . . . . .
+23
+7.4
+Time-averaged absolute temperature error over the full validation set. Peak
+errors (yellow, ~0.18-0.19 normalised units) are concentrated in the Antarctic
+marginal ice zone (coastal transition band, y Γëê40-55). The deep Antarctic
+interior shows consistently low errors (~0.08), reflecting the smoother and
+more predictable temperature regime there.
+. . . . . . . . . . . . . . . . . .
+24
+7.5
+Temperature evolution at a single Antarctic grid point over 50 consecutive
+forecast samples. The AFNO prediction (orange) closely tracks the ERA5
+ground truth (blue) through the full synoptic cycle, including a warm anomaly
+peaking near sample 22-24 and subsequent cold phase. Minor phase lag near
+the peak is a characteristic of MSE-trained autoregressive models. . . . . . .
+25
+6
+
+=== PAGE 7 ===
+List of Tables
+3.1
+ERA5 NetCDF files retrieved for the Antarctic regional domain. . . . . . . .
+12
+3.2
+ERA5 variables used for model training and evaluation. . . . . . . . . . . . .
+13
+4.1
+Model architectural hyperparameters. . . . . . . . . . . . . . . . . . . . . . .
+16
+5.1
+Training hyperparameters. . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+7
+
+=== PAGE 8 ===
+Chapter 1
+Introduction
+Weather forecasting in polar regions presents unique scientific and operational challenges.
+The Antarctic continent, characterised by extreme cold, strong katabatic winds, and limited
+observational infrastructure, remains one of the most data-sparse regions on Earth. Accurate
+meteorological prediction over Antarctica is critical for the safety of research personnel,
+logistics planning of polar expeditions, and understanding of global climate systems.
+Traditional Numerical Weather Prediction (NWP) systems such as ECMWF's Integrated
+Forecasting System (IFS) rely on physics-based dynamical models that are computationally
+intensive and struggle to represent fine-scale polar phenomena. In recent years, data-driven
+deep learning models have emerged as powerful alternatives, demonstrating skill comparable
+to or exceeding operational NWP systems at a fraction of the computational cost [14].
+FourCastNet (Fourier Forecasting Neural Network), developed by Pathak et al. (2022) at
+NVIDIA, represents a landmark in this direction. It employs the Adaptive Fourier Neural
+Operator (AFNO) as its core computational block, enabling efficient modelling of global
+atmospheric dynamics by operating in the Fourier frequency domain. FourCastNet demon-
+strated competitive skill against ECMWF's IFS on global forecasting benchmarks while
+being orders of magnitude faster at inference.
+This project adapts the FourCastNet philosophy to a regional Antarctic context. A lightweight
+AFNO-based model is trained on ERA5 reanalysis data over the Antarctic domain, with spe-
+cial attention to the Maitri research station region -- India's permanent station in Antarctica.
+The goal is to demonstrate the feasibility of Fourier-based deep learning forecasting at the
+regional polar scale, laying the groundwork for future high-resolution deployments on HPC
+infrastructure.
+1.1
+Objectives
+The primary objectives of this project are:
+1. To acquire, preprocess, and structure ERA5 reanalysis data over the Antarctic domain
+for deep learning-based training.
+2. To implement a lightweight AFNO-based FourCastNet architecture adapted for re-
+gional polar forecasting.
+8
+
+=== PAGE 9 ===
+3. To train the model to produce 24-hour forecasts from a 48-hour input history at 6-
+hourly resolution.
+4. To evaluate forecast quality through diagnostic visualisations for key atmospheric vari-
+ables at the Maitri station region.
+5. To design the codebase for scalability on HPC systems, enabling future deployment on
+larger Antarctic domains and higher resolutions.
+1.2
+Organisation of the Report
+Chapter 2 provides a literature review of relevant work in data-driven weather forecasting and
+neural operators. Chapter 3 describes the dataset and preprocessing methodology. Chapter
+4 presents the model architecture in detail. Chapter 5 covers training configuration and the
+experimental setup. Chapter 6 discusses results and diagnostic outputs. Chapter 7 presents
+all diagnostic figures produced by the model. Chapter 8 concludes the report and outlines
+future directions. Recommendations are provided in Chapter 9.
+9
+
+=== PAGE 10 ===
+Chapter 2
+Literature Review
+This chapter surveys the key works that motivate and contextualise the present project,
+spanning data-driven weather prediction, neural operators, and Antarctic meteorological
+modelling.
+2.1
+Data-Driven Weather Prediction
+The application of deep learning to weather forecasting has a long history, but the emer-
+gence of global-scale transformer-based models marks a qualitative shift. Weyn et al. (2020)
+demonstrated the viability of convolutional neural networks for medium-range forecasting
+on a cubed-sphere grid [19], while Rasp and Thuerey (2021) showed that purely data-driven
+models could begin to approach NWP skill levels [16].
+Pangu-Weather [2], developed by Huawei, employs a 3D Earth Transformer architecture
+to achieve superior 10-day forecast accuracy compared to ECMWF's operational model.
+GraphCast [11], developed by Google DeepMind, uses a graph neural network over a multi-
+scale icosahedral mesh and achieves state-of-the-art skill on 1380 forecast targets. Aurora
+[4] further pushes the boundary with a large foundation model approach.
+These works
+collectively establish that data-driven models can serve as viable operational forecasting
+tools.
+2.2
+Fourier Neural Operators and FourCastNet
+Neural Operators represent a paradigm for learning mappings between function spaces, en-
+abling resolution-independent generalisation. The Fourier Neural Operator (FNO) proposed
+by Li et al. (2021) applies spectral convolutions in the Fourier domain to learn PDE solution
+operators efficiently [12]. The Adaptive Fourier Neural Operator (AFNO), introduced by
+Guibas et al. (2021), extends this to vision transformer-style architectures [18] with learned
+Fourier mixing [5].
+FourCastNet [14] integrates AFNO blocks into an end-to-end autoregressive forecasting ar-
+chitecture trained on ERA5. It demonstrated a 45├ù speedup over ECMWF IFS at inference
+while matching forecast skill at 2-week lead times for many variables. Its open-source release
+made regional adaptation projects such as the present one feasible.
+10
+
+=== PAGE 11 ===
+2.3
+Antarctic Meteorological Modelling
+Antarctic weather forecasting has historically relied on global NWP output supplemented by
+regional atmospheric models such as the Polar WRF [3, 17] and AMPS (Antarctic Mesoscale
+Prediction System) [15]. These systems, while physically principled, are computationally
+expensive and require regular updates to boundary conditions from global models.
+The limited observational density over Antarctica -- few radiosonde stations, sparse surface
+networks, and challenging satellite retrieval -- makes data assimilation difficult. Deep learn-
+ing models trained on reanalysis data offer a promising alternative for regional deployment,
+particularly for research stations such as Maitri and Bharati operated by NCPOR.
+11
+
+=== PAGE 12 ===
+Chapter 3
+Dataset and Preprocessing
+3.1
+ERA5 Reanalysis Data
+The ERA5 reanalysis dataset, produced by the European Centre for Medium-Range Weather
+Forecasts (ECMWF), serves as the primary data source for this project. ERA5 provides
+global atmospheric data at 0.25Γùªhorizontal resolution with hourly temporal resolution, as-
+similating observations from satellites, radiosondes, surface stations, and aircraft through a
+state-of-the-art 4D-Var data assimilation system [8].
+Data was retrieved from the Copernicus Climate Data Store (CDS) for the period 2021-
+2025, targeting the Antarctic regional domain centred on the Maitri research station. The
+retrieved files are listed in Table 3.1.
+File
+Period
+era5 antarctica 2021.nc
+January 2021 - December 2021
+era5 antarctica 2022.nc
+January 2022 - December 2022
+era5 antarctica 2023.nc
+January 2023 - December 2023
+era5 antarctica 2024.nc
+January 2024 - December 2024
+era5 antarctica 2025.nc
+January 2025 - December 2025
+Table 3.1: ERA5 NetCDF files retrieved for the Antarctic regional domain.
+These files were merged and converted into a unified NumPy array era5 maitri.npy for
+efficient training.
+3.2
+Variables
+Four atmospheric variables were extracted from the ERA5 dataset, chosen to represent the
+primary surface-level meteorological state relevant for Antarctic station forecasting.
+Ta-
+ble 3.2 lists the variables and their channel indices.
+12
+
+=== PAGE 13 ===
+Index
+Variable
+Description
+0
+u10
+10 m zonal wind component (m sΓêÆ1)
+1
+v10
+10 m meridional wind component (m sΓêÆ1)
+2
+t2m
+2 m air temperature (K)
+3
+msl
+Mean sea level pressure (Pa)
+Table 3.2: ERA5 variables used for model training and evaluation.
+3.3
+Dataset Shape and Temporal Structure
+After extraction and merging, the raw dataset shape prior to padding is:
+X ΓêêRT├ùV ├ùH├ùW = R8768├ù4├ù21├ù101
+(3.1)
+where T = 8768 is the total number of 6-hourly timesteps, V = 4 is the number of variables,
+and (H, W) = (21, 101) are the spatial grid dimensions over the Antarctic regional domain.
+3.4
+Forecasting Configuration
+The model is configured for multi-step autoregressive forecasting with the following param-
+eters:
+I = 8,
+O = 4,
+Γêåt = 6 h
+(3.2)
+corresponding to an input window of 8 ├ù 6 = 48 hours and a forecast horizon of 4 ├ù 6 = 24
+hours. The learned mapping is:
+f╬╕ : XtΓêÆI+1:t 7ΓåÆ╦åXt+1:t+O
+(3.3)
+where f╬╕ denotes the AFNO-based FourCastNet model with parameters ╬╕.
+3.5
+Padding and Preprocessing
+Patch-based architectures require spatial dimensions to be exact multiples of the patch size.
+Automatic zero-padding is applied to satisfy this:
+(H, W) = (21, 101)
+pad
+ΓêÆΓêÆΓåÆ(24, 104)
+(3.4)
+Standard normalisation (zero mean, unit variance per variable) is applied across the training
+set prior to model input.
+13
+
+=== PAGE 14 ===
+Chapter 4
+Model Architecture
+This chapter describes the AFNO-based FourCastNet architecture implemented in this project.
+The model follows the original FourCastNet design philosophy [14] while remaining lightweight
+enough for local training and HPC deployment on regional Antarctic domains. The overall
+processing pipeline is:
+ERA5 Input (Tin ├ù V ├ù H ├ù W)
+Γåô
+Patch Embedding
+Γåô
+Positional Embedding
+Γåô
+AFNO Blocks (├ùN)
+Γåô
+Patch Recovery
+Γåô
+24-Hour Forecast (Tout ├ù V ├ù H ├ù W)
+4.1
+Patch Embedding
+The patch embedding module divides the input weather field into non-overlapping spatial
+patches of size P ├ù P using a 2D convolutional projection layer. This design is inspired by
+the Vision Transformer (ViT) tokenisation strategy [18]. For patch size P = 4, the spatial
+dimensions are reduced by a factor of 4 in each direction. Formally, for input x ΓêêRCin├ùH├ùW:
+z = Conv2D(x; kernel = P, stride = P, Cout = d)
+(4.1)
+where d is the embedding dimension (default d = 128). The resulting token map has spatial
+extent H
+P ├ù W
+P .
+14
+
+=== PAGE 15 ===
+4.2
+Positional Embedding
+Since patch-based tokenisation discards spatial ordering, learnable positional embeddings
+Epos ΓêêR
+H
+P ├ù W
+P ├ùd are added to each token. A key design decision in this implementation is
+the use of dynamic positional embeddings rather than hardcoded fixed counts, enabling the
+model to operate on multiple grid resolutions without modification.
+4.3
+Adaptive Fourier Neural Operator (AFNO) Block
+The AFNO block [5] is the core computational unit of FourCastNet, enabling efficient global
+atmospheric interaction modelling by operating in the Fourier frequency domain.
+Each
+AFNO block processes a spatial feature map z ΓêêRHΓÇ▓├ùW ΓÇ▓├ùd through:
+1. Fourier Transform: ╦åz = F(z)
+2. Frequency-domain mixing: ╦åzΓÇ▓ = ╧â(W2 ┬╖ ╧â(W1 ┬╖ ╦åz)),
+╧â = GELU
+3. Inverse Fourier Transform: zΓÇ▓ = FΓêÆ1(╦åzΓÇ▓)
+4. Residual connection: zΓÇ▓ΓÇ▓ = z + zΓÇ▓
+The full AFNO block follows the standard pre-norm transformer structure:
+zΓäô+1 = zΓäô+ MLP(LN(zΓäô+ AFNO(LN(zΓäô))))
+(4.2)
+where LN denotes Layer Normalisation [1], residual connections follow the design of He et
+al. [7], and the MLP uses hidden dimension ratio r = 4. A total of N = 6 AFNO blocks are
+stacked sequentially.
+4.4
+Patch Recovery
+Patch recovery inverts the patch embedding using a transposed 2D convolution:
+╦åx = ConvTranspose2D(z; kernel = P, stride = P, Cout = V ┬╖ O)
+(4.3)
+Output is reshaped to ╦åX ΓêêRB├ùO├ùV ├ùH├ùW, where B is batch size.
+4.5
+Dynamic Grid Support
+All modules -- patch embedding, positional embedding, AFNO blocks, and patch recovery
+-- are refactored to automatically infer spatial dimensions from input data. Combined with
+automatic padding, this enables deployment on the Maitri regional grid and any arbitrary
+ERA5 subdomain without modifying model code.
+15
+
+=== PAGE 16 ===
+4.6
+Model Configuration Summary
+Hyperparameter
+Value
+Patch size (P)
+4
+Embedding dimension (d)
+128
+Number of AFNO blocks (N)
+6
+MLP ratio (r)
+4
+Input steps (I)
+8
+Output steps (O)
+4
+Variables (V )
+4
+Approximate parameter count
+~1.1 M
+Table 4.1: Model architectural hyperparameters.
+16
+
+=== PAGE 17 ===
+Chapter 5
+Methodology and Training
+5.1
+Training Configuration
+Training is governed by a centralised configuration file (config.py).
+Table 5.1 lists the
+primary hyperparameters.
+Parameter
+Value
+Batch size
+4
+Learning rate
+10ΓêÆ4
+Optimiser
+Adam [10]
+Loss function
+Mean Squared Error (MSE)
+Epochs
+30
+Train/validation split
+80% / 20%
+Table 5.1: Training hyperparameters.
+The MSE loss function aggregates errors over all forecast steps, variables, and spatial grid
+points:
+L(╬╕) =
+1
+B ┬╖ O ┬╖ V ┬╖ H ┬╖ W
+X
+b,o,v,h,w
+
+╦åX(b,o,v,h,w) ΓêÆX(b,o,v,h,w)2
+(5.1)
+5.2
+Checkpointing
+The best model checkpoint (minimum validation loss) is saved to checkpoints/best model.pth,
+containing model weights, configuration metadata, and best validation loss score.
+5.3
+Visualisation and Diagnostics
+For every training epoch, diagnostic figures are generated automatically and stored under
+figures/epoch xxx/. Per variable, the following figure types are produced:
+17
+
+=== PAGE 18 ===
+1. Forecast vs. Truth spatial maps at each lead time.
+2. Signed error maps (Forecast ΓêÆTruth).
+3. Station-level T2M and MSL time series at the Maitri grid point.
+4. Training and validation loss curves.
+5. Prediction scatter plots against ERA5 ground truth.
+5.4
+Software Stack
+The implementation is built on PyTorch [13] for model definition and training, NumPy [6]
+for dataset preprocessing and array manipulation, netCDF4 Python [20] for reading ERA5
+files, and Matplotlib [9] for generating all diagnostic figures. This open-source stack ensures
+full reproducibility and portability across local workstations and HPC environments.
+5.5
+HPC Readiness
+The repository is structured for deployment on high-performance computing clusters, sup-
+porting data parallel training on multi-GPU nodes, configurable batch sizes and learning rate
+schedules, and progressive scaling from the 1.1 M parameter prototype to full FourCastNet-
+scale deployments (45-75 M parameters).
+18
+
+=== PAGE 19 ===
+Chapter 6
+Results and Discussion
+6.1
+Training Convergence
+The model was trained for 30 epochs on the ERA5 Antarctic dataset. As seen in Fig. 7.1,
+both training and validation MSE decrease sharply in the first 10 epochs, with the training
+loss starting at approximately 0.22 and dropping to around 0.08 by epoch 30. The validation
+loss converges to approximately 0.10 after epoch 15 and stabilises, indicating that the model
+reaches a generalisation plateau around this point. The gap between training and validation
+loss in later epochs suggests mild overfitting, expected given the limited 5-year dataset.
+6.2
+Temperature Forecast Skill
+The temperature forecast scatter plot (Fig. 7.2) shows a tight alignment along the diagonal
+for normalised temperature values across the range [ΓêÆ2.5, 2.0]. The scatter broadens slightly
+at the extremes, corresponding to rare anomalous temperature events that are harder to
+capture from the 48-hour input history. Overall, the high linear correlation indicates the
+model has learned the dominant temperature climatology of the region effectively.
+6.3
+Spatial Forecast Quality
+Fig. 7.3 presents Truth, Prediction, and Error maps for all four forecast steps (t+1 through
+t+4, each 6 hours apart). Key observations:
+ΓÇó The model correctly reproduces the large-scale latitudinal temperature gradient be-
+tween the warmer coastal band (yellow, lower latitudes) and the colder Antarctic in-
+terior (dark blue/purple, higher latitudes) at all lead times.
+ΓÇó The prediction panels closely mirror the truth panels at t+1 and t+2. At t+3 and t+4,
+the predicted fields show mild spatial smoothing -- a known tendency of MSE-trained
+models.
+ΓÇó The error maps show structured residuals concentrated in the mid-latitude transition
+zone (y Γëê20-50 grid points), where sharp gradients associated with the Antarctic
+19
+
+=== PAGE 20 ===
+coastal front are most difficult to capture. The high-latitude interior and the extreme
+southern band show comparatively low errors.
+6.4
+Average Spatial Temperature Error
+Fig. 7.4 shows the time-averaged absolute temperature error over the full validation set. The
+highest errors (yellow, ~0.18-0.19) are concentrated in the coastal transition zone around
+grid coordinates (y Γëê40-55, x Γëê60-80). This region corresponds to the Antarctic marginal
+ice zone, where sea-ice variability introduces sharp surface temperature gradients that the
+coarse 0.25ΓùªERA5 grid partially resolves. The deep Antarctic interior (upper portion of the
+grid) shows consistently low errors (~0.08), reflecting the smoother and more predictable
+temperature field there.
+6.5
+Station-Level Time Series
+Fig. 7.5 shows the forecast temperature evolution at a single Antarctic grid point over 50
+consecutive forecast samples. The prediction closely tracks the ground truth across all phases
+of the signal: the cold onset around samples 0-5, the synoptic warming event peaking near
+sample 22-24, and the subsequent cold phase from sample 30 onward. Phase errors (pre-
+diction slightly lagging the truth) are visible at a few sharp transitions, particularly around
+the peak, which is a typical property of autoregressive deep learning models at 24-hour lead
+times.
+6.6
+Limitations
+Several limitations of the current prototype are noted:
+ΓÇó Validation is performed against ERA5 rather than in-situ observational records, limit-
+ing direct assessment of real-world forecast skill.
+ΓÇó The coarse regional grid (~0.25Γùª) cannot resolve fine-scale katabatic wind features
+critical to Antarctic surface meteorology.
+ΓÇó The 5-year training dataset is short relative to global FourCastNet training sets span-
+ning multiple decades.
+ΓÇó Direct comparison against operational models (ECMWF IFS, Polar WRF) has not yet
+been performed.
+20
+
+=== PAGE 21 ===
+Chapter 7
+Diagnostic Figures
+This chapter collects all diagnostic figures produced by the AFNO FourCastNet training
+and evaluation pipeline. Figures include training convergence curves, spatial forecast maps
+across all lead times, error heatmaps, temperature scatter plots, and station-level time series.
+All figures are generated automatically at the end of each training epoch and represent the
+final best-checkpoint evaluation on the held-out validation set.
+Figure 7.1: AFNO FourCastNet training progress over 30 epochs.
+Training loss (blue)
+decreases continuously from 0.22 to 0.08. Validation loss (orange) plateaus at approximately
+0.10 after epoch 15, indicating good generalisation with mild late-epoch overfitting.
+21
+
+=== PAGE 22 ===
+Figure 7.2: Scatter plot of predicted versus ground truth normalised 2 m temperature over
+the full validation set. Points cluster tightly along the diagonal, confirming high overall
+forecast fidelity. Minor spread at extreme values reflects rare anomalous events.
+22
+
+=== PAGE 23 ===
+Figure 7.3: Spatial forecast evaluation across all four lead times (t+1 to t+4, each 6 hours).
+Each row shows ERA5 ground truth (left), AFNO prediction (middle), and signed error
+(right). The model captures the broad coastal-to-interior temperature gradient at all lead
+times. Structured residuals in the mid-grid coastal transition zone increase modestly with
+lead time.
+23
+
+=== PAGE 24 ===
+Figure 7.4: Time-averaged absolute temperature error over the full validation set. Peak
+errors (yellow, ~0.18-0.19 normalised units) are concentrated in the Antarctic marginal ice
+zone (coastal transition band, y Γëê40-55). The deep Antarctic interior shows consistently
+low errors (~0.08), reflecting the smoother and more predictable temperature regime there.
+24
+
+=== PAGE 25 ===
+Figure 7.5: Temperature evolution at a single Antarctic grid point over 50 consecutive fore-
+cast samples. The AFNO prediction (orange) closely tracks the ERA5 ground truth (blue)
+through the full synoptic cycle, including a warm anomaly peaking near sample 22-24 and
+subsequent cold phase. Minor phase lag near the peak is a characteristic of MSE-trained
+autoregressive models.
+25
+
+=== PAGE 26 ===
+Chapter 8
+Conclusions and Future Work
+8.1
+Conclusions
+This project has successfully demonstrated the feasibility of adapting the FourCastNet
+AFNO-based architecture to regional Antarctic weather forecasting. The key contributions
+are:
+1. A working ERA5 data pipeline for the Antarctic regional domain, producing a clean
+training-ready dataset spanning 2021-2025 at 6-hourly resolution.
+2. A lightweight, dynamic AFNO-based FourCastNet implementation that supports arbi-
+trary grid resolutions through automatic padding and dynamic positional embeddings.
+3. An automated training pipeline with checkpointing and epoch-level diagnostic visual-
+isation.
+4. Demonstrated forecast skill for surface temperature at 6-24 hour lead times, with a
+tight prediction-truth scatter and accurate tracking of synoptic-scale variability.
+5. An HPC-ready repository structure enabling progressive scaling toward full FourCastNet-
+scale deployment.
+The project establishes a solid foundation for future research-grade Antarctic deep learn-
+ing forecasting at NCPOR, bridging the gap between global AI weather models and the
+operational requirements of Indian polar research stations.
+8.2
+Future Work
+Several directions are identified for future extension:
+ΓÇó Station-wise observational validation: Validate forecasts against actual obser-
+vational records from Maitri and Bharati stations to obtain real-world skill metrics
+(RMSE, MAE, anomaly correlation coefficient).
+26
+
+=== PAGE 27 ===
+ΓÇó GraphCast comparison: Perform head-to-head skill comparison between the AFNO-
+based model and GraphCast-Small at Antarctic stations.
+ΓÇó CorrDiff integration: Explore diffusion-based post-processing to downscale coarse
+AFNO forecasts to station-scale resolution.
+ΓÇó Extended training data: Retrain on the full ERA5 record (1979-present) for im-
+proved generalisation.
+ΓÇó Higher-resolution domains: Adapt the pipeline to 0.1Γùªor finer Antarctic regional
+grids, resolving mesoscale katabatic wind features.
+ΓÇó Ocean-atmosphere coupling: Incorporate sea ice and SST variables to improve
+coastal Antarctic boundary conditions.
+ΓÇó HPC scaling: Scale the model to full FourCastNet parameter counts (45-75 M) on
+NCPOR HPC infrastructure.
+27
+
+=== PAGE 28 ===
+Chapter 9
+Recommendations
+Based on the experience and findings of this project, the following recommendations are
+made for future work at NCPOR:
+1. Establish a dedicated ERA5 archive: A curated, continuously updated ERA5
+archive for the Antarctic domain should be maintained at NCPOR to support ongoing
+deep learning model development without repeated CDS downloads.
+2. Invest in GPU-enabled HPC capacity: The training throughput of AFNO-based
+models scales nearly linearly with GPU count.
+Access to multi-GPU HPC nodes
+would enable training on decade-scale data with full FourCastNet model sizes within
+reasonable wall-clock time.
+3. Prioritise in-situ data collection and digitisation: Observational records from
+Maitri and Bharati are invaluable for model validation. Digitising historical station
+records and ensuring real-time data streams are archived would significantly enhance
+verification capability.
+4. Pursue collaborative benchmarking:
+Participating in benchmarking exercises
+with other Antarctic NWP groups (e.g., AMPS, MetService New Zealand) would pro-
+vide context for evaluating the relative skill of data-driven models.
+5. Consider probabilistic extensions: Future model versions should target probabilis-
+tic forecast outputs via ensemble generation or diffusion-based approaches to provide
+uncertainty quantification for operational decision-making.
+28
+
+=== PAGE 29 ===
+Bibliography
+[1] Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E Hinton. Layer normalization. In
+NeurIPS Workshop on Deep Learning Symposium, 2016.
+[2] Kaifeng Bi, Lingxi Xie, Hengheng Zhang, Xin Chen, Xiaotao Gu, and Qi Tian. Accurate
+medium-range global weather forecasting with 3D neural networks. Nature, 619:533-
+538, 2023.
+[3] David H Bromwich, Francis O Otieno, Keith M Hines, Kevin W Manning, and Elad
+Shilo. Development and testing of Polar WRF: 2. Arctic ocean. Journal of Geophysical
+Research: Atmospheres, 118(6):2463-2484, 2013.
+[4] Kristopher Chen, Jerry Luo, Jean-Christophe Golaz, et al. Aurora: A foundation model
+of the atmosphere. arXiv preprint arXiv:2405.13063, 2024.
+[5] John Guibas, Morteza Mardani, Zongyi Li, Andrew Tao, Anima Anandkumar, and
+Bryan Catanzaro. Adaptive Fourier neural operators: Efficient token mixers for trans-
+formers. In International Conference on Learning Representations (ICLR), 2022.
+[6] Charles R Harris, K Jarrod Millman, St┬┤efan J van der Walt, Ralf Gommers, Pauli
+Virtanen, David Cournapeau, Eric Wieser, Julian Taylor, Sebastian Berg, Nathaniel J
+Smith, et al. Array programming with NumPy. Nature, 585(7825):357-362, 2020.
+[7] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for
+image recognition. In IEEE Conference on Computer Vision and Pattern Recognition
+(CVPR), pages 770-778, 2016.
+[8] Hans Hersbach, Bill Bell, Paul Berrisford, Shoji Hirahara, Andr┬┤as Hor┬┤anyi, Joaqu┬┤─▒n
+Mu╦£noz-Sabater, Julien Nicolas, Carole Peubey, Raluca Radu, Dinand Schepers, et al.
+The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society,
+146(730):1999-2049, 2020.
+[9] John D Hunter. Matplotlib: A 2D graphics environment. Computing in Science &
+Engineering, 9(3):90-95, 2007.
+[10] Diederik P Kingma and Jimmy Ba. Adam: A method for stochastic optimization. arXiv
+preprint arXiv:1412.6980, 2014.
+29
+
+=== PAGE 30 ===
+[11] Remi Lam, Alvaro Sanchez-Gonzalez, Matthew Willson, Peter Wirnsberger, Meire For-
+tunato, Ferran Alet, Suman Ravuri, Timo Ewalds, Zach Eaton-Rosen, Weihua Hu, et al.
+Learning skillful medium-range global weather forecasting. Science, 382(6677):1416-
+1421, 2023.
+[12] Zongyi Li, Nikola Kovachki, Kamyar Azizzadenesheli, Burigede Liu, Kaushik Bhat-
+tacharya, Andrew Stuart, and Anima Anandkumar. Fourier neural operator for para-
+metric partial differential equations. In International Conference on Learning Repre-
+sentations (ICLR), 2021.
+[13] Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory
+Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, et al. PyTorch:
+An imperative style, high-performance deep learning library. In Advances in Neural
+Information Processing Systems (NeurIPS), volume 32, 2019.
+[14] Jaideep Pathak, Shashank Subramanian, Peter Harrington, Sanjeev Raja, Ashesh Chat-
+topadhyay, Morteza Mardani, Thorsten Kurth, David Hall, Zongyi Li, Kamyar Aziz-
+zadenesheli, Pedram Hassanzadeh, Karthik Kashinath, and Anima Anandkumar. Four-
+CastNet: A global data-driven high-resolution weather model using adaptive Fourier
+neural operators. arXiv preprint arXiv:2202.11214, 2022.
+[15] Jordan G Powers, Kevin W Manning, David H Bromwich, John J Cassano, and
+Andrew M Cayette.
+The Antarctic mesoscale prediction system (AMPS): A con-
+tributed Antarctic observing network. Bulletin of the American Meteorological Society,
+93(10):1545-1563, 2012.
+[16] Stephan Rasp and Nils Thuerey. Data-driven medium-range weather prediction with a
+resnet pretrained on climate simulations: A new model for WeatherBench. Journal of
+Advances in Modeling Earth Systems, 13(2):e2020MS002405, 2021.
+[17] Esa-Matti Tastula, Timo Vihma, and Edgar L Andreas. Evaluation of Polar WRF from
+simulations of the Antarctic atmospheric boundary layer. Monthly Weather Review,
+140(10):3258-3273, 2012.
+[18] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N
+Gomez, Lukasz Kaiser, and Illia Polosukhin. Attention is all you need. In Advances in
+Neural Information Processing Systems (NeurIPS), volume 30, 2017.
+[19] Jonathan A Weyn, Dale R Durran, and Rich Caruana. Improving data-driven global
+weather prediction using deep convolutional neural networks on a cubed sphere. Journal
+of Advances in Modeling Earth Systems, 12(9):e2020MS002109, 2020.
+[20] Jeff Whitaker et al. netCDF4 python interface, 2023.
+30
+
+=== PAGE 31 ===
+Appendices
+31
+
+=== PAGE 32 ===
+Appendix A
+Fourier Transform in Neural
+Operators
+The Discrete Fourier Transform (DFT) of a 2D spatial field u ΓêêRH├ùW is defined as:
+╦åu(k1, k2) =
+HΓêÆ1
+X
+n1=0
+WΓêÆ1
+X
+n2=0
+u(n1, n2) ┬╖ eΓêÆ2╧Çi(
+k1n1
+H
++ k2n2
+W )
+(A.1)
+The inverse DFT recovers the spatial field:
+u(n1, n2) =
+1
+HW
+HΓêÆ1
+X
+k1=0
+WΓêÆ1
+X
+k2=0
+╦åu(k1, k2) ┬╖ e2╧Çi(
+k1n1
+H
++ k2n2
+W )
+(A.2)
+In the AFNO block, the learned weight matrices W1 and W2 operate on complex-valued
+Fourier coefficients ╦åz. This allows the network to learn global spatial correlations at O(HW log HW)
+computational cost rather than the O((HW)2) cost of full self-attention.
+32
+
+=== PAGE 33 ===
+Appendix B
+ERA5 CDS API Retrieval Script
+The following Python script was used to retrieve ERA5 data from the Copernicus Climate
+Data Store:
+Listing B.1: ERA5 CDS API retrieval script for the Antarctic domain.
+1
+import
+cdsapi
+2
+3
+c = cdsapi.Client ()
+4
+5
+for year in range (2021 , 2026):
+6
+c.retrieve(
+7
+'reanalysis -era5 -single -levels ',
+8
+{
+9
+'product_type ': 'reanalysis ',
+10
+'variable ': [
+11
+'10 m_u_component_of_wind ',
+12
+'10 m_v_component_of_wind ',
+13
+'2 m_temperature ',
+14
+'mean_sea_level_pressure ',
+15
+],
+16
+'year ': str(year),
+17
+'month ': [f'{m:02d}' for m in range(1, 13)],
+18
+'day':
+[f'{d:02d}' for d in range(1, 32)],
+19
+'time ':
+['00:00 ', '06:00 ', '12:00 ', '18:00 '],
+20
+'area ':
+[-60, 10,
+-75, 15],
+# Maitri
+region [N,W,S,E]
+21
+'format ': 'netcdf ',
+22
+},
+23
+f'era5_antarctica_ {year }.nc'
+24
+)
+33
+
